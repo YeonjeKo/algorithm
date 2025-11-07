@@ -1,8 +1,8 @@
 import java.util.*;
 
 class Solution {
+    
     static boolean[] visited;
-    static int n;
     
     public int solution(int n, int[][] computers) {
         visited = new boolean[n];
@@ -18,7 +18,7 @@ class Solution {
         return cnt;
     }
     
-    void bfs(int node, int[][] computers) {
+    public void bfs(int node, int[][] computers) {
         Queue<Integer> q = new LinkedList<>();
         q.offer(node);
         visited[node] = true;
@@ -27,10 +27,10 @@ class Solution {
             int cur = q.poll();
             
             for (int i = 0; i < computers.length; i++) {
-                if (!visited[i] && computers[cur][i] == 1) {
-                    visited[i] = true;
-                    q.offer(i);
-                }
+                if (visited[i] || computers[cur][i] == 0)
+                    continue;
+                visited[i] = true;
+                q.offer(i);
             }
         }
     }
