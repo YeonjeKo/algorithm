@@ -2,54 +2,47 @@ import java.util.*;
 
 class Solution {
     static boolean[] visited;
-    static ArrayList<ArrayList<Integer>> g;
-    static int min = Integer.MAX_VALUE;
-    static int cnt = 0;
+    static List<List<Integer>> g;
+    static int cnt;
     
     public int solution(int n, int[][] wires) {
         g = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        
+        for (int i = 0; i <= n; i++)
             g.add(new ArrayList<>());
-        }
         
         for (int i = 0; i < wires.length; i++) {
-            g.get(wires[i][0] - 1).add(wires[i][1] - 1);
-            g.get(wires[i][1] - 1).add(wires[i][0] - 1);
+            g.get(wires[i][0]).add(wires[i][1]);
+            g.get(wires[i][1]).add(wires[i][0]);
         }
         
-        visited = new boolean[n];
-        
+        int min = Integer.MAX_VALUE;
         for (int i = 0; i < wires.length; i++) {
-            g.get(wires[i][0] - 1).remove((Integer)(wires[i][1] - 1));
-            g.get(wires[i][1] - 1).remove((Integer)(wires[i][0] - 1));
-            
+            visited = new boolean[n + 1];
             cnt = 1;
-            visited = new boolean[n];
-            dfs(0);
             
-            if (Math.abs(cnt - (n - cnt)) < min)
-                min = Math.abs(cnt - (n - cnt));
+            g.get(wires[i][0]).remove((Integer)wires[i][1]);
+            g.get(wires[i][1]).remove((Integer)wires[i][0]);
             
-            System.out.println(cnt);
+            dfs(wires, 1);
             
-            g.get(wires[i][0] - 1).add(wires[i][1] - 1);
-            g.get(wires[i][1] - 1).add(wires[i][0] - 1);
+            min = Math.min(min, Math.abs(cnt - (n - cnt)));
+
+            g.get(wires[i][0]).add(wires[i][1]);
+            g.get(wires[i][1]).add(wires[i][0]);
         }
         
         return min;
     }
     
-    void dfs(int k) {
-        if (visited[k])
-            return;
-        
+    void dfs(int[][] wires, int k) {
         visited[k] = true;
         
-        for (int i : g.get(k)) {
-            if (!visited[i]) {
+        for (int next : g.get(k)) {
+            if (!visited[next]) {
                 cnt++;
-                dfs(i);
+                dfs(wires, next);
             }
-        }    
+        }
     }
 }
