@@ -1,66 +1,53 @@
 import java.util.*;
 
 class Solution {
-    
-    static boolean[] isUsed;
-    static char[] cArr;
-    static List<Integer> nArr;
+    static int count = 0;
+    static Set<Integer> set = new HashSet<>();
     
     public int solution(String numbers) {
-        
-        nArr = new ArrayList<>();
-        for (int i = 0; i < numbers.length(); i++) {
-            isUsed = new boolean[numbers.length()];
-            cArr = new char[i + 1];
-            func(0, i + 1, numbers);
+        char[] nums = numbers.toCharArray();
+        for (int i = 1; i <= nums.length; i++) {
+            char[] result = new char[i];
+            boolean[] visited = new boolean[nums.length];
+            permutation(nums, result, visited, 0, i);
         }
         
-        int[] newList = nArr.stream().distinct().mapToInt(i -> i).toArray();
-        
-        int sum = 0;
-        for (int i = 0; i < newList.length; i++) {
-            if (find(newList[i]))
-                sum++;
-            
-            //System.out.println(newList[i]);
-        }
-        
-        return sum;
+        return set.size();
     }
     
-    void func(int k, int N, String s) {
-        if (k == N) {
-            int sum = 0;
-            for (int i = cArr.length - 1; i >= 0; i--) {
-                sum += (cArr[i] - '0') * Math.pow(10, i);
-                System.out.println(cArr[i] - '0');
-            }
-            nArr.add(sum);
-            //System.out.println(sum);
+    void permutation(char[] nums, char[] result, boolean[] visited, int depth, int k) {
+        if (depth == k) {
+            String str = new String(result);
+            int n = Integer.parseInt(str);
+            
+            if (isPrime(n))
+                set.add(n);
+            
+            System.out.println(n);
             
             return;
-        }      
-            
-        for (int i = 0; i < s.length(); i++) {
-            if (!isUsed[i]) {
-                cArr[k] = s.charAt(i);
-                isUsed[i] = true;
-                func(k + 1, N, s);
-                isUsed[i] = false;
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                result[depth] = nums[i];
+                permutation(nums, result, visited, depth + 1, k);
+                visited[i] = false;
             }
         }
     }
     
-    boolean find(int n) {
-        if (n <= 1)
+    boolean isPrime(int n) {
+        if (n == 0 || n == 1)
             return false;
         
-        for (int i = 2; i < n; i++) {
-            if (n % i == 0)
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
                 return false;
+            }  
         }
         
-        //System.out.println(n);
         return true;
     }
 }
