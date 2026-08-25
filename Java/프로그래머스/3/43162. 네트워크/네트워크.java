@@ -1,16 +1,16 @@
-import java.util.*;
-
 class Solution {
     
     static boolean[] visited;
+    static int N;
     
     public int solution(int n, int[][] computers) {
         visited = new boolean[n];
-        int cnt = 0;
+        N = n;
         
+        int cnt = 0;
         for (int i = 0; i < n; i++) {
             if (!visited[i]) {
-                bfs(i, computers);
+                dfs(i, computers);
                 cnt++;
             }
         }
@@ -18,20 +18,12 @@ class Solution {
         return cnt;
     }
     
-    public void bfs(int node, int[][] computers) {
-        Queue<Integer> q = new LinkedList<>();
-        q.offer(node);
-        visited[node] = true;
+    public void dfs(int n, int[][] computers) {
+        visited[n] = true;
         
-        while (!q.isEmpty()) {
-            int cur = q.poll();
-            
-            for (int i = 0; i < computers.length; i++) {
-                if (visited[i] || computers[cur][i] == 0)
-                    continue;
-                visited[i] = true;
-                q.offer(i);
-            }
+        for (int i = 0; i < N; i++) {
+            if (!visited[i] && computers[n][i] == 1)
+                dfs(i, computers);
         }
     }
 }
